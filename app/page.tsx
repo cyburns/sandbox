@@ -44,12 +44,15 @@ export default function Home() {
           <UserProfile user={user} key={index} />
         ))}
       </div>
-      <div>
+      <div className="mb-56">
         <button
           onClick={() => setCount(count + 1)}
-          className="bg-blue-900 px-10 py-5 rounded-lg"
+          className="bg-blue-900 px-10 py-5 rounded-lg m-7"
         >
           Increase count
+        </button>
+        <button className="bg-blue-900 px-10 py-5 rounded-lg m-7">
+          <a href="/gitHub">GitHub</a>
         </button>
       </div>
     </main>
