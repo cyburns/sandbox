@@ -54,6 +54,9 @@ export default function Home() {
         <button className="bg-blue-900 px-10 py-5 rounded-lg m-7">
           <a href="/gitHub">GitHub</a>
         </button>
+        <button className="bg-blue-900 px-10 py-5 rounded-lg m-7">
+          <a href="/test2">Test 2</a>
+        </button>
       </div>
     </main>
   );

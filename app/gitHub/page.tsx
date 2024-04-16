@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 
 const page = () => {
   const [count, setCount] = useState(0);
-  const [randomUserData, setRandomUserData] = useState([]);
+  const [randomUserData, setRandomUserData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState("");
+  const [isDataFound, setIsDataFound] = useState<null | string>(null);
 
   const GITHUB_API_URL = `https://api.github.com/users/${username}/repos`;
 
@@ -20,7 +21,11 @@ const page = () => {
 
       const jsonObj = await resposne.json();
 
-      setRandomUserData(jsonObj);
+      if (!jsonObj) {
+        setIsDataFound("No data found please try another username.");
+      }
+
+      setRandomUserData(randomUserData.concat(jsonObj));
     } catch (error) {
       console.error("Error getting random user:", error);
     } finally {
@@ -43,12 +48,27 @@ const page = () => {
         </button>
       </div>
 
+      {isDataFound && (
+        <div>
+          <p className="text-3xl text-white">{isDataFound}</p>
+        </div>
+      )}
+
       {isLoading ? (
         <div>
           <p className="text-3xl text-white">Loading repos...</p>
         </div>
       ) : (
         <div>
+          {randomUserData.length > 1 && (
+            <img
+              src={randomUserData[0].owner.avatar_url}
+              alt="avatar"
+              width={200}
+              height={200}
+              className="rounded-full"
+            />
+          )}
           {randomUserData.map((repo, index) => (
             <div key={index}>
               <p className="text-3xl text-white">{repo.name}</p>
