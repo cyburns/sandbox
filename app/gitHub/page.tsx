@@ -1,77 +1,107 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { Sparkline } from "@mantine/charts";
 
-const page = () => {
-  const [count, setCount] = useState(0);
-  const [randomUserData, setRandomUserData] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+const Page = () => {
   const [username, setUsername] = useState("");
-  const [isDataFound, setIsDataFound] = useState<null | string>(null);
+  const [commits, setCommits] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const GITHUB_API_URL = `https://api.github.com/users/${username}/repos`;
-
-  const getRandomUserApi = async () => {
+  const fetchCommits = async () => {
     setIsLoading(true);
+    setError("");
 
     try {
-      const resposne = await fetch(GITHUB_API_URL, {
-        method: "GET",
-      });
+      const response = await fetch(
+        `https://api.github.com/users/${username}/events`
+      );
 
-      const jsonObj = await resposne.json();
+      const events = await response.json();
+      const pushEvents = events.filter(
+        (event: any) => event.type === "PushEvent"
+      );
 
-      if (!jsonObj) {
-        setIsDataFound("No data found please try another username.");
-      }
+      const commitsData = pushEvents.map((event: any) => ({
+        repoName: event.repo.name,
+        commits: event.payload.commits.map((commit: any) => ({
+          message: commit.message,
+          sha: commit.sha,
+          url: commit.url,
+          author: commit.author.name,
+          date: commit.author.date,
+        })),
+      }));
 
-      setRandomUserData(randomUserData.concat(jsonObj));
+      setCommits(commitsData);
     } catch (error) {
-      console.error("Error getting random user:", error);
+      setError(
+        "Error fetching commits. Please check the username and try again."
+      );
+      console.error("Error fetching commits:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className=" flex justify-center items-center h-screen flex-col">
+    <div className="flex justify-center items-center h-screen flex-col">
       <input
         className="bg-gray-200 h-20 w-96 text-black text-2xl"
+        placeholder="Enter GitHub username"
+        value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
-      <div className="">
-        <button
-          className="bg-blue-900 text-2xl px-10 py-5 rounded-xl m-10"
-          onClick={getRandomUserApi}
-        >
-          Get repos
-        </button>
-      </div>
+      <button
+        className="bg-blue-900 text-2xl px-10 py-5 rounded-xl m-10"
+        onClick={fetchCommits}
+      >
+        Get Commits
+      </button>
 
-      {isDataFound && (
-        <div>
-          <p className="text-3xl text-white">{isDataFound}</p>
-        </div>
-      )}
+      {isLoading && <p className="text-3xl text-white">Loading commits...</p>}
 
-      {isLoading ? (
+      {error && <p className="text-3xl text-red-500">{error}</p>}
+
+      {commits && commits.length > 0 && (
         <div>
-          <p className="text-3xl text-white">Loading repos...</p>
-        </div>
-      ) : (
-        <div>
-          {randomUserData.length > 1 && (
-            <img
-              src={randomUserData[0].owner.avatar_url}
-              alt="avatar"
-              width={200}
-              height={200}
-              className="rounded-full"
-            />
-          )}
-          {randomUserData.map((repo, index) => (
-            <div key={index}>
-              <p className="text-3xl text-white">{repo.name}</p>
+          <Sparkline
+            w={200}
+            h={60}
+            data={[10, 20, 40, 20, 40, 10, 50]}
+            curveType="linear"
+            color="blue"
+            fillOpacity={0.6}
+            strokeWidth={2}
+          />
+          {commits.map((repoCommits, index) => (
+            <div key={index} className="mb-4">
+              <ul className="text-white">
+                {/* @ts-ignore */}
+                {repoCommits.commits.map((commit: any, index: number) => (
+                  <li key={index}>
+                    <p>
+                      <strong>Message:</strong> {commit.message}
+                    </p>
+                    <p>
+                      <strong>Author:</strong> {commit.author}
+                    </p>
+                    <p>
+                      <strong>Date:</strong> {commit.date}
+                    </p>
+                    <a
+                      href={commit.url}
+                      className="text-blue-400"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      View Commit
+                    </a>
+                    <hr className="my-2" />
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
@@ -80,4 +110,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

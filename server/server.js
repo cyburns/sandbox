@@ -20,9 +20,7 @@ app.get("/proxy/:email", async (req, res) => {
 
 app.get("/proxy/:encryptedPath", async (req, res) => {
   const { encryptedPath } = req.params;
-  console.log(encryptedPath);
   try {
-    // Make a request to the external API using the encrypted path
     const response = await fetch(
       `https://ciphersprint.pulley.com/${encryptedPath}`
     );
@@ -32,6 +30,21 @@ app.get("/proxy/:encryptedPath", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+app.get("/proxy/:thirdPath", async (req, res) => {
+  const { thirdPath } = req.params;
+  try {
+    const response = await fetch(
+      `https://ciphersprint.pulley.com/${thirdPath}`
+    );
+    const data = await response.json();
+    res.json(data);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "enc error" });
   }
 });
 
