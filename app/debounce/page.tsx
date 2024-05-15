@@ -10,28 +10,40 @@ const Page = () => {
 
   const endpoint = `https://jsonmock.hackerrank.com/api/weather?name=${city}`;
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(endpoint, {
-          method: "GET",
+  const fetchData = async () => {
+    try {
+      const response = await fetch(endpoint, {
+        method: "GET",
+      });
+
+      const jsonObj = await response.json();
+
+      if (!selectedCity) {
+        jsonObj.data.forEach((city: any) => {
+          setCitySuggestions([...citySuggestions, city.name]);
         });
-
-        const jsonObj = await response.json();
-
-        if (!selectedCity) {
-          jsonObj.data.forEach((city: any) => {
-            setCitySuggestions([...citySuggestions, city.name]);
-          });
-        }
-        console.log("jsonObj.data[0] -->", jsonObj.data[0]);
-        setCityData(jsonObj.data[0]);
-      } catch (error) {
-        console.error("Error getting weather data:", error);
       }
-    };
+      console.log("jsonObj.data[0] -->", jsonObj.data[0]);
+      setCityData(jsonObj.data[0]);
+    } catch (error) {
+      console.error("Error getting weather data:", error);
+    }
+  };
 
-    fetchData();
+  const debounce = (cb: any, delay: number) => {
+    let timeout: any;
+
+    return (...args: any) => {
+      clearTimeout(timeout);
+
+      timeout = setTimeout(() => {
+        cb(...args);
+      }, delay);
+    };
+  };
+
+  useEffect(() => {
+    debounce(fetchData(), 1000);
   }, [city]);
 
   return (
@@ -50,11 +62,15 @@ const Page = () => {
         value={city}
       />
 
+      <div>
+        <h1 className="text-white text-3xl">{city}</h1>
+      </div>
+
       {selectedCity ? (
         <div className="mt-10">
           <p className="text-white">Selected City: {selectedCity}</p>
           <p className="text-white">{cityData.weather}</p>
-          {cityData.status.map((stat, i) => (
+          {cityData.status.map((stat: any, i: number) => (
             <p key={i} className="text-white">
               {stat}
             </p>
@@ -63,17 +79,19 @@ const Page = () => {
       ) : (
         <div className="flex flex-col h-full">
           {citySuggestions.map((city: any, index: number) => (
-            <p
-              key={index}
-              className="text-white"
-              onClick={() => {
-                setCitySuggestions([]);
-                setCity(city);
-                setSelectedCity(city);
-              }}
-            >
-              {city}
-            </p>
+            <div className="bg-gray-500 w-full p-4 hover:bg-gray-300">
+              <p
+                key={index}
+                className="text-white"
+                onClick={() => {
+                  setCitySuggestions([]);
+                  setCity(city);
+                  setSelectedCity(city);
+                }}
+              >
+                {city}
+              </p>
+            </div>
           ))}
         </div>
       )}
