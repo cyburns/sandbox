@@ -1,1 +1,1 @@
-Sandbox to practice. Mostly frontend here.
+Sandbox to practice. Mostly frontend.
