@@ -1,11 +1,10 @@
-// server.js
 import express from "express";
 import cors from "cors";
 
 const app = express();
 app.use(cors());
 
-app.get("/proxy/:email", async (req, res) => {
+app.get("/proxy/email/:email", async (req, res) => {
   const { email } = req.params;
 
   try {
@@ -17,7 +16,7 @@ app.get("/proxy/:email", async (req, res) => {
   }
 });
 
-app.get("/proxy/:encryptedPath", async (req, res) => {
+app.get("/proxy/encrypted/:encryptedPath", async (req, res) => {
   const { encryptedPath } = req.params;
   try {
     const response = await fetch(
@@ -25,23 +24,21 @@ app.get("/proxy/:encryptedPath", async (req, res) => {
     );
     const data = await response.json();
     res.json(data);
-    console.log(data);
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
-app.get("/proxy/:thirdPath", async (req, res) => {
-  const { thirdPath } = req.params;
+app.get("/proxy/encoded/:encodedPath", async (req, res) => {
+  const { encodedPath } = req.params;
   try {
     const response = await fetch(
-      `https://ciphersprint.pulley.com/${thirdPath}`
+      `https://ciphersprint.pulley.com/${encodedPath}`
     );
     const data = await response.json();
     res.json(data);
-    console.log(data);
   } catch (error) {
-    res.status(500).json({ error: "enc error" });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
