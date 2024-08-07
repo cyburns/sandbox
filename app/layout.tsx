@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "@mantine/core/styles.css";
-import { ColorSchemeScript } from "@mantine/core";
+import { ApolloProvider } from "@apollo/client";
+import client from "@/lib/apollo-client";
 
 const inter = Inter({ subsets: ["latin"] });
 

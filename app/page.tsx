@@ -2,6 +2,7 @@
 
 import UserProfile from "@/components/UserProfile";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const API_URL = "https://randomuser.me/api";
 
@@ -52,16 +53,19 @@ export default function Home() {
           Increase count
         </button>
         <button className="bg-blue-900 px-10 py-5 rounded-lg m-7">
-          <a href="/gitHub">GitHub</a>
+          <Link href="/gitHub">GitHub</Link>
         </button>
         <button className="bg-blue-900 px-10 py-5 rounded-lg m-7">
-          <a href="/test2">Test 2</a>
+          <Link href="/test2">Test 2</Link>
         </button>
         <button className="bg-blue-900 px-10 py-5 rounded-lg m-7">
-          <a href="/pulley">Pulley</a>
+          <Link href="/pulley">Pulley</Link>
         </button>
         <button className="bg-blue-900 px-10 py-5 rounded-lg m-7">
-          <a href="/debounce">debounce</a>
+          <Link href="/debounce">debounce</Link>
+        </button>
+        <button className="bg-blue-900 px-10 py-5 rounded-lg m-7">
+          <Link href="/graphql">graphql</Link>
         </button>
       </div>
     </main>

@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.11.3",
     "@apollo/server": "^4.10.5",
     "@mantine/charts": "^7.8.1",
     "@mantine/core": "^7.8.1",
