@@ -25,7 +25,10 @@ async function solveChallenge(email) {
         decryptedPath = encryptedPath.encrypted_path;
         break;
       case "encoded as base64":
-        decryptedPath = Buffer.from(encryptedPath.encrypted_path, 'base64').toString('utf-8');
+        decryptedPath = Buffer.from(
+          encryptedPath.encrypted_path,
+          "base64"
+        ).toString("utf-8");
         break;
       // Add cases for other encryption methods if needed
       default:

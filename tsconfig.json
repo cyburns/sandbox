@@ -12,6 +12,10 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "rootDirs": ["src"],
+    "outDir": "dist",
+    "target": "es2020",
+    "types": ["node"],
     "plugins": [
       {
         "name": "next"
@@ -21,6 +25,12 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/pulley/page.jsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "app/pulley/page.jsx"
+  ],
   "exclude": ["node_modules"]
 }
