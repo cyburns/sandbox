@@ -44,6 +44,10 @@ const resolvers = {
     authors: () => db.authors,
     author: (_, args) => db.authors.find((author) => author.id === args.id),
   },
+  Game: {
+    reviews: (game) =>
+      db.reviews.filter((review) => review.game_id === game.id),
+  },
 };
 
 const server = new ApolloServer({ typeDefs, resolvers });
